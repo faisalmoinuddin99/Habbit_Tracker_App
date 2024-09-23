@@ -18,20 +18,17 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModel
 import com.example.habittrackerapp.activites.CounterViewModel
 import com.example.habittrackerapp.ui.theme.HabitTrackerAppTheme
 
 class MainActivity : ComponentActivity() {
 
 
-    private val counterViewModel : CounterViewModel by viewModels()
+    private val counterViewModel: CounterViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,18 +47,18 @@ class MainActivity : ComponentActivity() {
 }
 
 
-
 @Composable
 fun Parent(modifier: Modifier, paramViewModel: CounterViewModel) {
 
 
-    var count by paramViewModel.counter
+    // Observing LiveData as state
+    val count by paramViewModel.counter.observeAsState(0)
 
 
     Child(
-        onIncrement = { paramViewModel.incrementCounter()},
+        onIncrement = { paramViewModel.incrementCounter() },
         count = count,
-        onReset = { count = 0 },
+        onReset = { paramViewModel.resetCounter() },
         onDecrement = {
             if (count > 0) paramViewModel.decrementCounter()
         })
