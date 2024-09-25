@@ -60,6 +60,8 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.runtime.livedata)
+    implementation ("androidx.media3:media3-common:1.4.1")  // Without `-ktx`
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -72,6 +74,8 @@ dependencies {
 
     // Optional: OkHttp Logging Interceptor
     implementation("com.squareup.okhttp3:logging-interceptor:4.10.0")
-    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1")
+    implementation("com.google.code.gson:gson:2.8.8") // For parsing JSON
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1") // For ViewModel integration
 
 }
