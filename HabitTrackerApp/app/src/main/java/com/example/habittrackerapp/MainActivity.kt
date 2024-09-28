@@ -5,119 +5,97 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.habittrackerapp.activites.CounterViewModel
-import com.example.habittrackerapp.activites.UserViewModel
-import com.example.habittrackerapp.dto.UserDisplayData
+import com.example.habittrackerapp.screens.UserListScreen
 import com.example.habittrackerapp.ui.theme.HabitTrackerAppTheme
+import com.example.habittrackerapp.viewmodel.CounterViewModel
+import com.example.habittrackerapp.viewmodel.UserViewModel
 
 class MainActivity : ComponentActivity() {
 
-
-    private val counterViewModel: CounterViewModel by viewModels()
-    private val userViewModel : UserViewModel by viewModels()
+    private val userViewModel: UserViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             HabitTrackerAppTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    RandomUserApp(
-                        modifier = Modifier.padding(innerPadding),
-                        userViewModel = userViewModel
-                    )
+                // A surface container using the 'background' color from the theme
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+
+                ) {
+                    UserListScreen(userViewModel)
                 }
             }
         }
     }
 }
 
-
 @Composable
-fun Parent(modifier: Modifier, paramViewModel: CounterViewModel) {
+fun ParentCounter(modifier: Modifier, myCounterViewModel: CounterViewModel = viewModel()) {
 
-
-    // Observing LiveData as state
-    val count by paramViewModel.counter.observeAsState(0)
-
-
-    Child(
-        onIncrement = { paramViewModel.incrementCounter() },
-        count = count,
-        onReset = { paramViewModel.resetCounter() },
+    val counter by myCounterViewModel.data.observeAsState(0)
+    HelperCounter(
         onDecrement = {
-            if (count > 0) paramViewModel.decrementCounter()
-        })
-
+            myCounterViewModel.onDecrement()
+        },
+        count = counter,
+        onIncrement = {
+            myCounterViewModel.onIncrement()
+        }
+    )
 }
 
 @Composable
-fun Child(
+fun HelperCounter(
     onIncrement: () -> Unit,
-    count: Int,
-    onReset: () -> Unit,
+    count: Int = 0,
     onDecrement: () -> Unit
 ) {
-
-
     Column(
         modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(text = "Count $count")
-        Spacer(modifier = Modifier.height(16.dp))
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    )
+    {
+
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             Button(onClick = { onIncrement() }) {
                 Text(text = "+")
             }
-            Button(onClick = { onReset() }) {
-                Text(text = "Reset")
-            }
+            Text(text = "Counter $count")
             Button(onClick = { onDecrement() }) {
                 Text(text = "-")
             }
-        }
-    }
 
-}
-
-@Composable
-fun RandomUserApp(modifier: Modifier,userViewModel: UserViewModel = viewModel()) {
-    val userData by userViewModel.userData.observeAsState(UserDisplayData("Loading...", "N/A"))
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(text = "${userData.firstName}, ${userData.gender}") // Handle null case here
-
-        Spacer(modifier = Modifier.height(20.dp))
-
-        Button(onClick = { userViewModel.fetchRandomUser() }) {
-            Text(text = "Fetch Another User")
         }
     }
 }
