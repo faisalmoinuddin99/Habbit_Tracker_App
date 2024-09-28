@@ -74,7 +74,6 @@ fun UserListScreen(userViewModel: UserViewModel) {
                         }
                     }
                 }
-
                 errorMessage?.let { error ->
                     Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
                 }
