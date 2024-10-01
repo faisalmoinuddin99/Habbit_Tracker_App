@@ -55,6 +55,7 @@ junitPlatform {
     filters("debug") {
         excludeTags("slow")
     }
+    instrumentationTests.includeExtensions.set(true)
 }
 
 dependencies {
@@ -85,4 +86,6 @@ dependencies {
     // (Optional) If you also have JUnit 4-based tests
     testImplementation("junit:junit:4.13.2")
     testRuntimeOnly("org.junit.vintage:junit-vintage-engine:5.11.0")
+
+    androidTestImplementation("org.junit.jupiter:junit-jupiter-api:5.11.0")
 }

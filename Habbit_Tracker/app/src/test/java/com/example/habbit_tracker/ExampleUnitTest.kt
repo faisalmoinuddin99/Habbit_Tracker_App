@@ -23,7 +23,7 @@ import org.junit.jupiter.params.provider.ValueSource
 class ExampleUnitTest {
     @org.junit.jupiter.api.Test
     fun addition_isCorrect() {
-        assertEquals(5, 2 + 2)
+        assertEquals(5, 3 + 2)
     }
 
     @org.junit.jupiter.api.Test
